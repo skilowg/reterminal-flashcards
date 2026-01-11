@@ -31,6 +31,36 @@ export default async function handler(req, res) {
     .furigana { font-size: 28px; opacity: 0.9; }
     .meaning { font-size: 26px; }
     .meta { font-size: 18px; opacity: 0.8; }
+    html, body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  background: #000;
+  color: #fff;
+  font-family: system-ui, -apple-system, "Hiragino Sans", "Noto Sans JP", sans-serif;
+
+  /* center the card */
+  display: flex;
+  align-items: center;     /* vertical */
+  justify-content: center; /* horizontal */
+
+  /* optional: safe padding so text doesn't touch edges on 800x480 */
+  padding: 24px;
+  box-sizing: border-box;
+}
+
+.wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 21px;               /* scale this as you like */
+  text-align: center;      /* center lines */
+
+  /* optional: keep it from spanning too wide */
+  max-width: 760px;        /* 800 - padding */
+}
   </style>
 </head>
 <body>
