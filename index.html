@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>JLPT Flashcard</title>
+  <style>
+    body { margin:0; padding:24px; font-family: system-ui, -apple-system, "Hiragino Sans", "Noto Sans JP", sans-serif; }
+    .wrap { display:flex; flex-direction:column; gap:14px; }
+    .word { font-size: 64px; font-weight: 700; line-height: 1.05; }
+    .furigana { font-size: 28px; opacity: 0.85; }
+    .meaning { font-size: 26px; }
+    .meta { font-size: 18px; opacity: 0.7; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="word" id="word">…</div>
+    <div class="furigana" id="furigana"></div>
+    <div class="meaning" id="meaning"></div>
+    <div class="meta" id="meta"></div>
+  </div>
+
+  <script>
+    // Optional: set ?level=1..5 on the page URL
+    const params = new URLSearchParams(location.search);
+    const level = params.get("level"); // "1".."5"
+
+    const api = new URL("https://jlpt-vocab-api.vercel.app/api/words/random");
+    if (level) api.searchParams.set("level", level);
+
+    async function run() {
+      const res = await fetch(api.toString(), { cache: "no-store" });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const j = await res.json();
+
+      document.getElementById("word").textContent = j.word ?? "";
+      document.getElementById("furigana").textContent = j.furigana ? `(${j.furigana})` : "";
+      document.getElementById("meaning").textContent = j.meaning ?? "";
+      document.getElementById("meta").textContent = `level: ${j.level ?? "?"}   romaji: ${j.romaji ?? ""}`;
+    }
+
+    run().catch(err => {
+      document.getElementById("word").textContent = "Error loading";
+      document.getElementById("meaning").textContent = err.message;
+    });
+  </script>
+</body>
+</html>
