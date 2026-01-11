@@ -4,8 +4,17 @@ export default async function handler(req, res) {
   const api = new URL("https://jlpt-vocab-api.vercel.app/api/words/random");
   api.searchParams.set("level", level);
 
-  const r = await fetch(api.toString(), { headers: { "cache-control": "no-store" } });
-  if (!r.ok) return res.status(500).send(`API error: ${r.status}`);
+  const r = await fetch(api.toString(), {
+    headers: { "cache-control": "no-store" },
+  });
+
+  if (!r.ok) {
+    res.statusCode = 500;
+    res.setHeader("Content-Type", "text/plain; charset=utf-8");
+    res.setHeader("Cache-Control", "no-store");
+    res.end(`API error: ${r.status}`);
+    return;
+  }
 
   const j = await r.json();
 
@@ -14,89 +23,41 @@ export default async function handler(req, res) {
   const meaning = j.meaning ?? "";
   const meta = `N${level} · ${j.romaji ?? ""}`;
 
+  res.statusCode = 200;
   res.setHeader("Content-Type", "text/html; charset=utf-8");
   res.setHeader("Cache-Control", "no-store");
 
-  res.status(200).send(`<!doctype html>
+  // NOTE: No <style> tag. Inline styles only for max compatibility with e-ink web renderers.
+  res.end(`<!doctype html>
 <html>
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta http-equiv="refresh" content="3600"/>
-  html, body {
-  width: 100%;
-  height: 100%;
-  margin: 0;
-}
-
-body {
-  background: #000;
-  color: #fff;
-  font-family: system-ui, -apple-system, "Hiragino Sans", "Noto Sans JP", sans-serif;
-
-  display: flex;
-  align-items: center;       /* vertical center */
-  justify-content: center;   /* horizontal center */
-
-  padding: 24px;
-  box-sizing: border-box;
-}
-
-.wrap {
-  display: flex;
-  flex-direction: column;
-  gap: 21px;
-  text-align: center;
-  max-width: 760px;          /* good for 800x480 */
-}
-
-.word { font-size: 64px; font-weight: 700; line-height: 1.05; }
-.furigana { font-size: 28px; opacity: 0.9; }
-.meaning { font-size: 26px; }
-.meta { font-size: 18px; opacity: 0.8; }
-
-body {
-  background: #000;
-  color: #fff;
-  font-family: system-ui, -apple-system, "Hiragino Sans", "Noto Sans JP", sans-serif;
-
-  /* center the card */
-  display: flex;
-  align-items: center;     /* vertical */
-  justify-content: center; /* horizontal */
-
-  /* optional: safe padding so text doesn't touch edges on 800x480 */
-  padding: 24px;
-  box-sizing: border-box;
-}
-
-.wrap {
-  display: flex;
-  flex-direction: column;
-  gap: 21px;               /* scale this as you like */
-  text-align: center;      /* center lines */
-
-  /* optional: keep it from spanning too wide */
-  max-width: 760px;        /* 800 - padding */
-}
-  </style>
 </head>
-<body>
-  <div class="wrap">
-    <div class="word">${escapeHtml(word)}</div>
-    <div class="furigana">${escapeHtml(furi)}</div>
-    <div class="meaning">${escapeHtml(meaning)}</div>
-    <div class="meta">${escapeHtml(meta)}</div>
-  </div>
+
+<body style="margin:0; width:100vw; height:100vh; background:#000; color:#fff; font-family:system-ui,-apple-system,'Hiragino Sans','Noto Sans JP',sans-serif;">
+  <table style="width:100%; height:100%; border-collapse:collapse;">
+    <tr>
+      <td style="text-align:center; vertical-align:middle; padding:24px;">
+        <div style="max-width:760px; margin:0 auto;">
+          <div style="font-size:64px; font-weight:700; line-height:1.05;">${escapeHtml(word)}</div>
+          <div style="font-size:28px; opacity:0.9; margin-top:21px;">${escapeHtml(furi)}</div>
+          <div style="font-size:26px; margin-top:21px;">${escapeHtml(meaning)}</div>
+          <div style="font-size:18px; opacity:0.8; margin-top:21px;">${escapeHtml(meta)}</div>
+        </div>
+      </td>
+    </tr>
+  </table>
 </body>
 </html>`);
+}
 
-  function escapeHtml(s) {
-    return String(s)
-      .replaceAll("&", "&amp;")
-      .replaceAll("<", "&lt;")
-      .replaceAll(">", "&gt;")
-      .replaceAll('"', "&quot;")
-      .replaceAll("'", "&#039;");
-  }
+function escapeHtml(s) {
+  return String(s)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
 }
