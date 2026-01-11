@@ -23,19 +23,37 @@ export default async function handler(req, res) {
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta http-equiv="refresh" content="3600"/>
-  <style>
-    body { margin:0; padding:24px; background:#000; color:#fff;
-           font-family: system-ui,-apple-system,"Hiragino Sans","Noto Sans JP",sans-serif; }
-    .wrap { display:flex; flex-direction:column; gap:14px; }
-    .word { font-size: 64px; font-weight: 700; line-height: 1.05; }
-    .furigana { font-size: 28px; opacity: 0.9; }
-    .meaning { font-size: 26px; }
-    .meta { font-size: 18px; opacity: 0.8; }
-    html, body {
+  html, body {
   width: 100%;
   height: 100%;
   margin: 0;
 }
+
+body {
+  background: #000;
+  color: #fff;
+  font-family: system-ui, -apple-system, "Hiragino Sans", "Noto Sans JP", sans-serif;
+
+  display: flex;
+  align-items: center;       /* vertical center */
+  justify-content: center;   /* horizontal center */
+
+  padding: 24px;
+  box-sizing: border-box;
+}
+
+.wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 21px;
+  text-align: center;
+  max-width: 760px;          /* good for 800x480 */
+}
+
+.word { font-size: 64px; font-weight: 700; line-height: 1.05; }
+.furigana { font-size: 28px; opacity: 0.9; }
+.meaning { font-size: 26px; }
+.meta { font-size: 18px; opacity: 0.8; }
 
 body {
   background: #000;
