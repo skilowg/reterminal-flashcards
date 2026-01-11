@@ -41,10 +41,10 @@ export default async function handler(req, res) {
     <tr>
       <td style="text-align:center; vertical-align:middle; padding:24px;">
         <div style="max-width:760px; margin:0 auto;">
-          <div style="font-size:64px; font-weight:700; line-height:1.05;">${escapeHtml(word)}</div>
-          <div style="font-size:28px; opacity:0.9; margin-top:21px;">${escapeHtml(furi)}</div>
-          <div style="font-size:26px; margin-top:21px;">${escapeHtml(meaning)}</div>
-          <div style="font-size:18px; opacity:0.8; margin-top:21px;">${escapeHtml(meta)}</div>
+          <div style="font-size:120px; font-weight:700; line-height:1.05;">${escapeHtml(word)}</div>
+          <div style="font-size:53px; opacity:0.9; margin-top:21px;">${escapeHtml(furi)}</div>
+          <div style="font-size:53px; margin-top:21px;">${escapeHtml(meaning)}</div>
+          <div style="font-size:35px; opacity:0.8; margin-top:21px;">${escapeHtml(meta)}</div>
         </div>
       </td>
     </tr>
